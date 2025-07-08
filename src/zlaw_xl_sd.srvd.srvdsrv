@@ -1,0 +1,5 @@
+@EndUserText.label: 'Excel Service'
+define service ZLAW_XL_SD {
+  expose ZLAW_C_XL_User as ExcelUser;
+  expose ZLAW_C_XL_Data as ExcelData;
+}

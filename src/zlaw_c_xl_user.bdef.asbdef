@@ -1,0 +1,30 @@
+projection;
+strict ( 2 );
+use draft;
+use side effects;
+define behavior for ZLAW_C_XL_User //alias <alias_name>
+{
+  use create;
+  use update;
+  use delete;
+
+  use action uploadExcelData;
+
+  use action Activate;
+  use action Edit;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _ExcelData { create; with draft; }
+}
+
+define behavior for ZLAW_C_XL_Data //alias <alias_name>
+{
+  //  use update;
+  //  use delete;
+
+  use action processData;
+
+  use association _ExcelUser { with draft; }
+}
