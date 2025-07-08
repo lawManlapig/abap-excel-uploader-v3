@@ -1,0 +1,101 @@
+managed implementation in class zbp_law_i_xl_user unique;
+strict ( 2 );
+
+with draft;
+
+define behavior for ZLAW_I_XL_User alias ExcelHead
+implementation in class zlaw_cl_bp_xl_user unique
+persistent table zlaw_xl_user
+lock master
+total etag LastChangedAt
+draft table zlaw_xl_user_dr
+early numbering
+authorization master ( instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+  field ( readonly ) EndUser, FileId;
+  association _ExcelData { create; with draft; }
+
+  // Logic to read excel data into associated entity ZMAKS_I_XL_DATA
+  action uploadExcelData result [1] $self;
+
+  // Change File Status During Creation of new record
+  determination FillFileStatus on modify { field EndUser; }
+  // Change File Status When file is selected
+  determination FillSelectedStatus on modify { field Attachment; }
+
+  //determine action ChangeFileName { determination FillSelectedStatus ; }
+
+  side effects
+  {
+    field Attachment affects field FileStatus;
+    action uploadExcelData affects $self, messages;
+    //determine action ChangeFileName executed on field Attachment affects $self, messages;
+  }
+
+
+  //Draft actions
+  draft action Activate optimized;
+  draft action Edit;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+
+  mapping for zlaw_xl_user
+    {
+      EndUser            = end_user;
+      FileId             = file_id;
+      FileStatus         = file_status;
+      Attachment         = attachment;
+      Mimetype           = mimetype;
+      Filename           = filename;
+      LocalCreatedBy     = local_created_by;
+      LocalCreatedAt     = local_created_at;
+      LocalLastChangedBy = local_last_changed_by;
+      LocalLastChangedAt = local_last_changed_at;
+      LastChangedAt      = last_changed_at;
+    }
+}
+
+define behavior for ZLAW_I_XL_Data alias ExcelData
+implementation in class zlaw_cl_bp_xl_data unique
+persistent table zlaw_xl_data
+draft table zlaw_xl_data_dr
+lock dependent by _ExcelUser
+authorization dependent by _ExcelUser
+//etag master <field_name>
+{
+  update;
+  delete;
+  field ( readonly ) EndUser, FileId, LineNumber,
+  PoNumber, PoItem, GrQuantity, UnitOfMeasure,
+  SiteId, HeaderText;
+  field ( readonly, numbering : managed ) LineId;
+  association _ExcelUser { with draft; }
+
+  //action uploadXLData result [1] $self;
+  action processData result [1] $self;
+
+  //  side effects
+  //  {
+  //    action uploadXLData affects $self, messages;
+  //  }
+
+  mapping for zlaw_xl_data
+    {
+      EndUser       = end_user;
+      FileId        = file_id;
+      LineId        = line_id;
+      LineNumber    = line_no;
+      PoNumber      = po_number;
+      PoItem        = po_item;
+      GrQuantity    = gr_quantity;
+      UnitOfMeasure = unit_of_measure;
+      SiteId        = site_id;
+      HeaderText    = header_text;
+    }
+}
