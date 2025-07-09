@@ -1,15 +1,5 @@
-class ZLAW_CL_BP_XL_DATA definition
-  public
-  abstract
-  final
-  create public .
-
-public section.
-protected section.
-private section.
+CLASS zlaw_cl_bp_xl_data DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zlaw_i_xl_user.
 ENDCLASS.
 
-
-
-CLASS ZLAW_CL_BP_XL_DATA IMPLEMENTATION.
+CLASS zlaw_cl_bp_xl_data IMPLEMENTATION.
 ENDCLASS.

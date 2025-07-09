@@ -17,6 +17,8 @@ CLASS lhc_ExcelHead DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR ExcelHead~FillSelectedStatus.
     METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
       IMPORTING REQUEST requested_authorizations FOR ExcelHead RESULT result.
+*    METHODS get_instance_features FOR INSTANCE FEATURES
+*      IMPORTING keys REQUEST requested_features FOR ExcelHead RESULT result.
 
 ENDCLASS.
 
@@ -288,5 +290,8 @@ CLASS lhc_ExcelHead IMPLEMENTATION.
 
   METHOD get_global_authorizations.
   ENDMETHOD.
+
+*  METHOD get_instance_features.
+*  ENDMETHOD.
 
 ENDCLASS.
